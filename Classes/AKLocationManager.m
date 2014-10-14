@@ -113,6 +113,10 @@
                                                                selector:@selector(timerEnded)
                                                                userInfo:nil
                                                                 repeats:NO];
+		
+		if ([_locationManager respondsToSelector:@selector(requestWhenInUseAuthorization)]) {
+			[_locationManager requestWhenInUseAuthorization];
+		}
         [_locationManager startUpdatingLocation];
         
         AKLLog(@"\n Started locating\n ==============\n Distance filter accuracy: %.2f\n Desired accuracy: %.2f\n Timeout: %.2f", _distanceFilterAccuracy, _desiredAccuracy, _timeoutTimeInterval);
@@ -226,7 +230,8 @@
     
 + (BOOL)canLocate
     {
-        return (([CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorized) ||
+        return (([CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorizedWhenInUse) ||
+				([CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorizedAlways) ||
                 ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusNotDetermined))
         && [CLLocationManager locationServicesEnabled];
     }
